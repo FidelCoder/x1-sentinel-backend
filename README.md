@@ -46,6 +46,24 @@ cp .env.example .env
 forge test -vvv
 ```
 
+## Current Testnet Deployment
+
+- Network: `X1 EcoChain Testnet (Maculatus)`
+- Chain ID: `10778`
+- RPC: `https://maculatus-rpc.x1eco.com/`
+- Explorer: `https://maculatus-scan.x1eco.com/`
+- Contract (`X1SentinelRegistry`): `0xB36B20436b1D8f67CFbBF83D79F5C000E823418D`
+- Deployment tx: `0x0d8207884f41c67591a08f6df399017999347068cb3d5cf92cc33516f83218a9`
+
+Backend env values should align with:
+
+```bash
+CHAIN_ID=10778
+RPC_URL=https://maculatus-rpc.x1eco.com/
+CONTRACT_ADDRESS=0xB36B20436b1D8f67CFbBF83D79F5C000E823418D
+DEPLOYMENT_MANIFEST_PATH=./contracts/deployments/latest.json
+```
+
 ## Endpoints
 
 - `GET /health`
