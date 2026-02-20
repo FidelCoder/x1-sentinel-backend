@@ -7,3 +7,8 @@ coverage/
 *.log
 .DS_Store
 Thumbs.db
+contracts/lib/
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+contracts/.env

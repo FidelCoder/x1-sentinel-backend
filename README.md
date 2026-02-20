@@ -33,6 +33,19 @@ Server runs at `http://localhost:4010` by default.
 
 If `RPC_URL` and `CONTRACT_ADDRESS` are missing, API serves demo-safe fallback data so UI prototyping is unblocked.
 
+Default manifest path in `.env.example` points to `./contracts/deployments/latest.json`.
+
+## Contracts (In Repo)
+
+Foundry contract package is located at `contracts/`.
+
+```bash
+cd contracts
+forge install foundry-rs/forge-std --no-commit
+cp .env.example .env
+forge test -vvv
+```
+
 ## Endpoints
 
 - `GET /health`
