@@ -10,6 +10,7 @@ router.get('/', (_req, res) => {
     chainId: env.CHAIN_ID,
     chainCurrencySymbol: env.CHAIN_CURRENCY_SYMBOL,
     chainExplorerUrl: env.CHAIN_EXPLORER_URL,
+    rpcUrl: env.RPC_URL,
     contractAddress: env.CONTRACT_ADDRESS,
     mode: isChainModeEnabled() ? 'onchain' : 'demo'
   };

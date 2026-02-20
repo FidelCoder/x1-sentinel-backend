@@ -13,7 +13,10 @@ export const demoReports: SafetyReport[] = [
     timestamp: now - 1000 * 60 * 30,
     upvotes: 8,
     downvotes: 1,
-    resolved: false
+    resolved: false,
+    malicious: false,
+    resolvedBy: '0x0000000000000000000000000000000000000000',
+    resolvedAt: 0
   },
   {
     id: 1,
@@ -25,7 +28,10 @@ export const demoReports: SafetyReport[] = [
     timestamp: now - 1000 * 60 * 90,
     upvotes: 5,
     downvotes: 0,
-    resolved: false
+    resolved: false,
+    malicious: false,
+    resolvedBy: '0x0000000000000000000000000000000000000000',
+    resolvedAt: 0
   },
   {
     id: 0,
@@ -37,6 +43,9 @@ export const demoReports: SafetyReport[] = [
     timestamp: now - 1000 * 60 * 180,
     upvotes: 2,
     downvotes: 3,
-    resolved: false
+    resolved: false,
+    malicious: false,
+    resolvedBy: '0x0000000000000000000000000000000000000000',
+    resolvedAt: 0
   }
 ];

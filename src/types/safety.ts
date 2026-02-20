@@ -11,6 +11,9 @@ export interface SafetyReport {
   upvotes: number;
   downvotes: number;
   resolved: boolean;
+   malicious: boolean;
+   resolvedBy: string;
+   resolvedAt: number;
 }
 
 export interface PrivacyFactors {
@@ -61,6 +64,7 @@ export interface ChainConfig {
   chainId: number;
   chainCurrencySymbol: string;
   chainExplorerUrl: string;
+  rpcUrl: string;
   contractAddress: string;
   mode: 'onchain' | 'demo';
 }

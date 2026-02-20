@@ -27,6 +27,7 @@ Server runs at `http://localhost:4010` by default.
 - `CHAIN_ID`: target EVM chain id
 - `CHAIN_CURRENCY_SYMBOL`: native token symbol
 - `CHAIN_EXPLORER_URL`: optional explorer base URL
+- `DEPLOYMENT_MANIFEST_PATH`: optional local path to deployment manifest (`latest.json`)
 - `RPC_URL`: EVM RPC endpoint (optional)
 - `CONTRACT_ADDRESS`: deployed registry contract (optional)
 
@@ -40,3 +41,5 @@ If `RPC_URL` and `CONTRACT_ADDRESS` are missing, API serves demo-safe fallback d
 - `GET /api/reports?limit=10&offset=0`
 - `GET /api/reports/:id`
 - `POST /api/reports`
+- `POST /api/reports/:id/vote`
+- `POST /api/reports/:id/resolve`

@@ -15,13 +15,16 @@ const normalizeReport = (id: number, raw: any): SafetyReport => {
     id,
     reporter: raw.reporter,
     targetAddress: raw.targetAddress,
-    nameTag: raw.ensName || null,
+    nameTag: raw.nameTag || raw.ensName || null,
     reason: reasonFromCode(Number(raw.reason)),
     evidence: raw.evidence,
     timestamp: Number(raw.timestamp) * 1000,
     upvotes: Number(raw.upvotes),
     downvotes: Number(raw.downvotes),
-    resolved: Boolean(raw.resolved)
+    resolved: Boolean(raw.resolved),
+    malicious: Boolean(raw.malicious),
+    resolvedBy: raw.resolvedBy ?? '0x0000000000000000000000000000000000000000',
+    resolvedAt: Number(raw.resolvedAt ?? 0) * 1000
   };
 };
 
@@ -30,20 +33,26 @@ const scoreFromReports = (reports: SafetyReport[]): number => {
     return 0;
   }
 
-  const totalUpvotes = reports.reduce((sum, report) => sum + report.upvotes, 0);
-  const totalDownvotes = reports.reduce((sum, report) => sum + report.downvotes, 0);
+  const activeReports = reports.filter((report) => !(report.resolved && !report.malicious));
+  const totalUpvotes = activeReports.reduce((sum, report) => sum + report.upvotes, 0);
+  const totalDownvotes = activeReports.reduce((sum, report) => sum + report.downvotes, 0);
 
   if (totalUpvotes === 0) {
     return 0;
   }
 
   const netVotes = Math.max(0, totalUpvotes - totalDownvotes);
-  const score = Math.round((netVotes * 100) / (reports.length + 1));
+  const score = Math.round((netVotes * 100) / (activeReports.length + 1));
   return Math.min(100, score);
 };
 
 const isFlaggedFromReports = (reports: SafetyReport[]): boolean => {
-  return reports.some((report) => report.upvotes >= 3 && report.upvotes > report.downvotes);
+  return reports.some((report) => {
+    if (report.resolved) {
+      return report.malicious;
+    }
+    return report.upvotes >= 3 && report.upvotes > report.downvotes;
+  });
 };
 
 router.get('/:address', async (req, res) => {
