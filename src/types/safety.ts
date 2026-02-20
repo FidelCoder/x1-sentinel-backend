@@ -55,3 +55,12 @@ export interface CheckResult {
   mode: 'onchain' | 'demo';
   timestamp: string;
 }
+
+export interface ChainConfig {
+  chainName: string;
+  chainId: number;
+  chainCurrencySymbol: string;
+  chainExplorerUrl: string;
+  contractAddress: string;
+  mode: 'onchain' | 'demo';
+}

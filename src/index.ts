@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import NodeCache from 'node-cache';
 import { env, isChainModeEnabled } from './config/env';
 import checkRoutes from './routes/check';
+import configRoutes from './routes/config';
 import reportRoutes from './routes/reports';
 
 const app = express();
@@ -30,6 +31,7 @@ app.get('/', (_req, res) => {
     name: 'X1 Sentinel API',
     version: '0.1.0',
     endpoints: {
+      config: '/api/config',
       check: '/api/check/:address',
       reports: '/api/reports',
       health: '/health'
@@ -37,6 +39,7 @@ app.get('/', (_req, res) => {
   });
 });
 
+app.use('/api/config', configRoutes);
 app.use('/api/check', checkRoutes);
 app.use('/api/reports', reportRoutes);
 

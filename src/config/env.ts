@@ -12,6 +12,9 @@ export const env = {
   PORT: toNumber(process.env.PORT, 4010),
   CORS_ORIGIN: process.env.CORS_ORIGIN ?? '*',
   CHAIN_NAME: process.env.CHAIN_NAME ?? 'X1 EcoChain',
+  CHAIN_ID: toNumber(process.env.CHAIN_ID, 0),
+  CHAIN_CURRENCY_SYMBOL: process.env.CHAIN_CURRENCY_SYMBOL ?? 'X1',
+  CHAIN_EXPLORER_URL: process.env.CHAIN_EXPLORER_URL ?? '',
   RPC_URL: process.env.RPC_URL ?? '',
   CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS ?? ''
 } as const;
