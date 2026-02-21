@@ -87,7 +87,7 @@ router.get('/:address', async (req, res) => {
 
       for (const reportId of reportIds) {
         const numericId = Number(reportId);
-        const raw = await contract.getReport(reportId);
+        const raw = await contract.reports(reportId);
         reports.push(normalizeReport(numericId, raw));
       }
     } else {

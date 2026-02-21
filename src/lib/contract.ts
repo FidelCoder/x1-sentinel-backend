@@ -4,7 +4,7 @@ import { env, isChainModeEnabled } from '../config/env';
 const SAFETY_REGISTRY_ABI = [
   'function checkAddress(address _address) external view returns (bool isFlagged, uint256[] memory reportIds)',
   'function calculateRiskScore(address _address) external view returns (uint256 score)',
-  'function getReport(uint256 _reportId) external view returns (tuple(address reporter, address targetAddress, string nameTag, uint8 reason, string evidence, uint256 timestamp, uint256 upvotes, uint256 downvotes, bool resolved, bool malicious, address resolvedBy, uint256 resolvedAt))',
+  'function reports(uint256 _reportId) external view returns (address reporter, address targetAddress, string nameTag, uint8 reason, string evidence, uint256 timestamp, uint256 upvotes, uint256 downvotes, bool resolved, bool malicious, address resolvedBy, uint256 resolvedAt)',
   'function reportCount() external view returns (uint256)',
   'function voteOnReport(uint256 _reportId, bool _upvote) external',
   'function resolveReport(uint256 _reportId, bool _malicious) external',

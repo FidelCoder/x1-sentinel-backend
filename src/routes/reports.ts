@@ -62,7 +62,7 @@ router.get('/', async (req, res) => {
         break;
       }
 
-      const rawReport = await contract.getReport(i);
+      const rawReport = await contract.reports(i);
       reports.push(normalizeReport(i, rawReport));
     }
 
@@ -95,7 +95,7 @@ router.get('/:id', async (req, res) => {
       return res.json(report);
     }
 
-    const rawReport = await contract.getReport(id);
+    const rawReport = await contract.reports(id);
     return res.json(normalizeReport(id, rawReport));
   } catch {
     return res.status(404).json({ error: 'Report not found' });
@@ -159,7 +159,7 @@ router.post('/:id/vote', async (req, res) => {
       });
     }
 
-    const rawReport = await contract.getReport(id);
+    const rawReport = await contract.reports(id);
     if (rawReport.resolved) {
       return res.status(400).json({ error: 'Report already resolved' });
     }
