@@ -23,6 +23,13 @@ npm run dev
 
 Server runs at `http://localhost:4010` by default.
 
+## Deploy to Vercel
+
+1. Import this repo in Vercel.
+2. Keep root directory as `./`.
+3. Set runtime environment variables from `.env.example` (at minimum: `RPC_URL`, `CONTRACT_ADDRESS`, `AI_DECISION_ANCHOR_ADDRESS`, `DEPIN_ANCHOR_ADDRESS`, and chain metadata).
+4. Deploy. The backend uses `vercel.json` to route all paths to `api/index.ts`.
+
 ## Environment
 
 - `PORT`: API port
@@ -76,18 +83,22 @@ forge test -vvv
 - Chain ID: `10778`
 - RPC: `https://maculatus-rpc.x1eco.com/`
 - Explorer: `https://maculatus-scan.x1eco.com/`
-- Contract (`X1SentinelRegistry`): `0xB36B20436b1D8f67CFbBF83D79F5C000E823418D`
-- Deployment tx: `0x0d8207884f41c67591a08f6df399017999347068cb3d5cf92cc33516f83218a9`
+- Contract (`X1SentinelRegistry`): `0x5C4Be8d3fF603cba1A25dB2D269B4219c72F6855`
+- Contract (`X1SentinelAIDecisionAnchor`): `0x19CA137e578A81B9FBD0f7ca5D77468e238e4646`
+- Contract (`X1SentinelDepinAnchor`): `0x331Fdd4a93D9779030de8B086B4dfa21be11c6E2`
+- Registry deploy tx: `0x65c2bac2c2c5a01660147b90291fff5d72dd25eae29e87fe51a8fee47f7bf6be`
+- AI anchor deploy tx: `0x0685da0d98c092482b67e450f4d4bfa1ad88e0e3974c58425ff32c96e3b1c853`
+- DePIN anchor deploy tx: `0x7c0dca95a35ec9700de98856437cad4cf7834f09773e4ea5808a1ffa6326d0a1`
 
 Backend env values should align with:
 
 ```bash
 CHAIN_ID=10778
 RPC_URL=https://maculatus-rpc.x1eco.com/
-CONTRACT_ADDRESS=0xB36B20436b1D8f67CFbBF83D79F5C000E823418D
+CONTRACT_ADDRESS=0x5C4Be8d3fF603cba1A25dB2D269B4219c72F6855
 DEPLOYMENT_MANIFEST_PATH=./contracts/deployments/latest.json
-AI_DECISION_ANCHOR_ADDRESS=
-DEPIN_ANCHOR_ADDRESS=
+AI_DECISION_ANCHOR_ADDRESS=0x19CA137e578A81B9FBD0f7ca5D77468e238e4646
+DEPIN_ANCHOR_ADDRESS=0x331Fdd4a93D9779030de8B086B4dfa21be11c6E2
 ```
 
 ## Endpoints

@@ -1,8 +1,10 @@
 {
+  "aiDecisionAnchorAddress": "0x19CA137e578A81B9FBD0f7ca5D77468e238e4646",
   "chainCurrencySymbol": "X1T",
   "chainExplorerUrl": "https://maculatus-scan.x1eco.com/",
   "chainId": 10778,
   "chainName": "X1 EcoChain Testnet (Maculatus)",
-  "contractAddress": "0xB36B20436b1D8f67CFbBF83D79F5C000E823418D",
+  "contractAddress": "0x5C4Be8d3fF603cba1A25dB2D269B4219c72F6855",
+  "depinAnchorAddress": "0x331Fdd4a93D9779030de8B086B4dfa21be11c6E2",
   "rpcUrl": "https://maculatus-rpc.x1eco.com/"
 }

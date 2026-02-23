@@ -7,6 +7,22 @@ import {X1SentinelDepinAnchor} from "../src/X1SentinelDepinAnchor.sol";
 import {X1SentinelRegistry} from "../src/X1SentinelRegistry.sol";
 
 contract Deploy is Script {
+    function _loadPrivateKey() internal view returns (uint256) {
+        string memory raw = vm.envString("PRIVATE_KEY");
+        bytes memory rawBytes = bytes(raw);
+        require(rawBytes.length > 0, "PRIVATE_KEY is required");
+
+        bool hasHexPrefix = rawBytes.length > 1 &&
+            rawBytes[0] == bytes1("0") &&
+            (rawBytes[1] == bytes1("x") || rawBytes[1] == bytes1("X"));
+
+        if (hasHexPrefix) {
+            return vm.parseUint(raw);
+        }
+
+        return vm.parseUint(string.concat("0x", raw));
+    }
+
     function run()
         external
         returns (
@@ -15,7 +31,7 @@ contract Deploy is Script {
             X1SentinelDepinAnchor depinAnchor
         )
     {
-        uint256 deployerKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerKey = _loadPrivateKey();
 
         string memory chainName = vm.envOr("CHAIN_NAME", string("X1 EcoChain"));
         string memory currencySymbol = vm.envOr("CHAIN_CURRENCY_SYMBOL", string("X1"));
