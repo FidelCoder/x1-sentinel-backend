@@ -1,3 +1,6 @@
+import { AiRiskDecision } from './ai';
+import { DepinHealthResponse } from './depin';
+
 export type ReportReason = 'Phishing' | 'Scam' | 'RugPull' | 'MaliciousContract' | 'Spam' | 'Other';
 
 export interface SafetyReport {
@@ -11,9 +14,9 @@ export interface SafetyReport {
   upvotes: number;
   downvotes: number;
   resolved: boolean;
-   malicious: boolean;
-   resolvedBy: string;
-   resolvedAt: number;
+  malicious: boolean;
+  resolvedBy: string;
+  resolvedAt: number;
 }
 
 export interface PrivacyFactors {
@@ -48,6 +51,7 @@ export interface CheckResult {
   address: string;
   isFlagged: boolean;
   riskScore: number;
+  unresolvedReportCount: number;
   privacyScore: number;
   privacyGrade: PrivacyGrade;
   privacyFactors: PrivacyFactors;
@@ -55,6 +59,8 @@ export interface CheckResult {
   reportCount: number;
   reports: SafetyReport[];
   externalFlags: ExternalFlags;
+  depinHealth: DepinHealthResponse;
+  aiDecision: AiRiskDecision;
   mode: 'onchain' | 'demo';
   timestamp: string;
 }
@@ -66,5 +72,7 @@ export interface ChainConfig {
   chainExplorerUrl: string;
   rpcUrl: string;
   contractAddress: string;
+  aiDecisionAnchorAddress?: string;
+  depinAnchorAddress?: string;
   mode: 'onchain' | 'demo';
 }

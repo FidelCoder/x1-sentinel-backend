@@ -12,6 +12,8 @@ router.get('/', (_req, res) => {
     chainExplorerUrl: env.CHAIN_EXPLORER_URL,
     rpcUrl: env.RPC_URL,
     contractAddress: env.CONTRACT_ADDRESS,
+    aiDecisionAnchorAddress: env.AI_DECISION_ANCHOR_ADDRESS,
+    depinAnchorAddress: env.DEPIN_ANCHOR_ADDRESS,
     mode: isChainModeEnabled() ? 'onchain' : 'demo'
   };
 

@@ -1,6 +1,9 @@
 # X1 Sentinel Contracts
 
-Foundry package for deploying and testing `X1SentinelRegistry`.
+Foundry package for deploying and testing:
+- `X1SentinelRegistry`
+- `X1SentinelAIDecisionAnchor`
+- `X1SentinelDepinAnchor`
 
 ## Setup
 
@@ -24,7 +27,10 @@ forge script script/Deploy.s.sol \
   --broadcast
 ```
 
-After deployment, `deployments/latest.json` is generated for backend/frontend wiring.
+After deployment, `deployments/latest.json` is generated for backend/frontend wiring with:
+- `contractAddress`
+- `aiDecisionAnchorAddress`
+- `depinAnchorAddress`
 
 ## Current Testnet Deployment
 
@@ -32,6 +38,7 @@ After deployment, `deployments/latest.json` is generated for backend/frontend wi
 - Chain ID: `10778`
 - Contract (`X1SentinelRegistry`): `0xB36B20436b1D8f67CFbBF83D79F5C000E823418D`
 - Deployment tx: `0x0d8207884f41c67591a08f6df399017999347068cb3d5cf92cc33516f83218a9`
+- Anchor contracts (`X1SentinelAIDecisionAnchor`, `X1SentinelDepinAnchor`): not deployed yet in this manifest
 
 Use this `.env` shape for deployment (do not commit secrets):
 

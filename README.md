@@ -7,6 +7,10 @@ Standalone TypeScript API for risk checks, community reporting, and safety telem
 - Address risk checks (`/api/check/:address`)
 - Recent report feed (`/api/reports`)
 - Report submission payload prep (`POST /api/reports`)
+- Agentic AI risk scoring with policy guardrails (`/api/ai`)
+- Onchain anchor preparation + reads for AI and DePIN artifacts (`/api/anchors`)
+- DePIN node registry + signed attestation ingestion (`/api/depin`)
+- DePIN health projection endpoint (`GET /api/depin/health/:address`)
 - Automatic fallback to demo mode when chain config is not set
 
 ## Quick Start
@@ -30,6 +34,26 @@ Server runs at `http://localhost:4010` by default.
 - `DEPLOYMENT_MANIFEST_PATH`: optional local path to deployment manifest (`latest.json`)
 - `RPC_URL`: EVM RPC endpoint (optional)
 - `CONTRACT_ADDRESS`: deployed registry contract (optional)
+- `AI_DECISION_ANCHOR_ADDRESS`: deployed `X1SentinelAIDecisionAnchor` contract address
+- `DEPIN_ANCHOR_ADDRESS`: deployed `X1SentinelDepinAnchor` contract address
+- `DEPIN_EIP712_DOMAIN_NAME`: EIP-712 domain name for DePIN signatures
+- `DEPIN_EIP712_DOMAIN_VERSION`: EIP-712 domain version for DePIN signatures
+- `DEPIN_MAX_CLOCK_SKEW_SECONDS`: max allowed future/past skew for signed payload timestamps
+- `DEPIN_MAX_ATTESTATION_AGE_SECONDS`: max age for accepted attestation timestamps
+- `DEPIN_MAX_REGISTRATION_AGE_SECONDS`: max age for accepted node registration timestamps
+- `DEPIN_NONCE_RETENTION_SECONDS`: replay-protection nonce retention horizon
+- `DEPIN_ATTESTATION_RETENTION_SECONDS`: in-memory attestation retention horizon
+- `DEPIN_HEALTH_WINDOW_HOURS`: default lookback for `/api/depin/health/:address`
+- `DEPIN_REQUIRE_NODE_REGISTRATION`: require node registry membership before attestation ingest
+- `AI_SCORING_MODE`: `heuristic` (local) or `openai` (LLM-backed decisioning)
+- `AI_OPENAI_BASE_URL`: OpenAI API base URL for scoring mode `openai`
+- `AI_OPENAI_MODEL`: OpenAI model name used for decisioning
+- `OPENAI_API_KEY`: OpenAI API key (required when `AI_SCORING_MODE=openai`)
+- `AI_POLICY_WARN_THRESHOLD`: score threshold for warning policy
+- `AI_POLICY_CHALLENGE_THRESHOLD`: score threshold for challenge policy
+- `AI_POLICY_BLOCK_THRESHOLD`: score threshold for block policy
+- `AI_POLICY_MIN_AUTOMATION_CONFIDENCE`: minimum confidence to auto-execute elevated policy actions
+- `AI_DECISION_RETENTION`: per-address in-memory AI decision history size
 
 If `RPC_URL` and `CONTRACT_ADDRESS` are missing, API serves demo-safe fallback data so UI prototyping is unblocked.
 
@@ -62,6 +86,8 @@ CHAIN_ID=10778
 RPC_URL=https://maculatus-rpc.x1eco.com/
 CONTRACT_ADDRESS=0xB36B20436b1D8f67CFbBF83D79F5C000E823418D
 DEPLOYMENT_MANIFEST_PATH=./contracts/deployments/latest.json
+AI_DECISION_ANCHOR_ADDRESS=
+DEPIN_ANCHOR_ADDRESS=
 ```
 
 ## Endpoints
@@ -74,3 +100,39 @@ DEPLOYMENT_MANIFEST_PATH=./contracts/deployments/latest.json
 - `POST /api/reports`
 - `POST /api/reports/:id/vote`
 - `POST /api/reports/:id/resolve`
+- `GET /api/ai/config`
+- `POST /api/ai/score`
+- `GET /api/ai/decisions/:address?limit=10`
+- `GET /api/anchors/config`
+- `POST /api/anchors/ai/prepare`
+- `POST /api/anchors/depin/prepare`
+- `GET /api/anchors/ai/:address?limit=10`
+- `GET /api/anchors/depin/:address?limit=10`
+- `GET /api/depin/eip712`
+- `POST /api/depin/nodes/register`
+- `GET /api/depin/nodes`
+- `GET /api/depin/nodes/:address`
+- `PATCH /api/depin/nodes/:address` (`{ "active": true|false }`)
+- `POST /api/depin/attest`
+- `GET /api/depin/health/:address?windowHours=24&latest=6`
+
+## DePIN Signing Flow (EIP-712)
+
+1. Fetch signing schema with `GET /api/depin/eip712`.
+2. Register node with `POST /api/depin/nodes/register` (signed `NodeRegistration` payload).
+3. Submit telemetry with `POST /api/depin/attest` (signed `NodeAttestation` payload).
+4. Query computed health using `GET /api/depin/health/:address`.
+
+## AI Decision Flow
+
+1. Aggregate context from onchain reports, privacy analysis, external flags, and DePIN health.
+2. Score with `/api/ai/score` (heuristic by default, optional OpenAI model).
+3. Apply deterministic policy guardrails (`allow`, `warn`, `challenge`, `manual_review`, `block`).
+4. Persist decision artifacts in memory (`inputHash`, `outputHash`, `modelVersion`, `generatedAt`).
+
+## Anchor Flow
+
+1. Generate AI or DePIN artifacts in backend services (`/api/check`, `/api/ai/score`, `/api/depin/health`).
+2. Call `/api/anchors/*/prepare` to receive wallet-ready contract method + params.
+3. Submit transaction from authorized publisher wallet.
+4. Query anchored records using `/api/anchors/ai/:address` or `/api/anchors/depin/:address`.

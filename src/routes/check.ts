@@ -4,6 +4,8 @@ import NodeCache from 'node-cache';
 import { demoReports } from '../data/demoReports';
 import { getContract, getProvider } from '../lib/contract';
 import { reasonFromCode } from '../lib/reasons';
+import { scoreRiskContext } from '../services/ai';
+import { getAddressHealth } from '../services/depin';
 import { aggregateExternalData } from '../services/external';
 import { calculatePrivacyScore } from '../services/privacy';
 import { CheckResult, SafetyReport } from '../types/safety';
@@ -55,6 +57,19 @@ const isFlaggedFromReports = (reports: SafetyReport[]): boolean => {
   });
 };
 
+const topReasons = (reports: SafetyReport[]): string[] => {
+  const counts = new Map<string, number>();
+
+  for (const report of reports) {
+    counts.set(report.reason, (counts.get(report.reason) ?? 0) + 1);
+  }
+
+  return Array.from(counts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([reason]) => reason);
+};
+
 router.get('/:address', async (req, res) => {
   try {
     const { address } = req.params;
@@ -98,11 +113,28 @@ router.get('/:address', async (req, res) => {
 
     const privacy = await calculatePrivacyScore(address, reports.length, provider);
     const externalFlags = await aggregateExternalData(address);
+    const unresolvedReportCount = reports.filter((report) => !report.resolved).length;
+    const depinHealth = getAddressHealth(address);
+    const aiDecision = await scoreRiskContext({
+      address,
+      baseRiskScore: riskScore,
+      reportCount: reports.length,
+      unresolvedReportCount,
+      isFlagged,
+      privacyScore: privacy.score,
+      privacyGrade: privacy.grade,
+      externalFlagCount: externalFlags.totalFlags,
+      depinStatus: depinHealth.summary.status,
+      depinHealthScore: depinHealth.summary.healthScore,
+      depinConfidence: depinHealth.summary.confidence,
+      topReasons: topReasons(reports)
+    });
 
     const result: CheckResult = {
       address,
       isFlagged,
       riskScore,
+      unresolvedReportCount,
       privacyScore: privacy.score,
       privacyGrade: privacy.grade,
       privacyFactors: privacy.factors,
@@ -110,6 +142,8 @@ router.get('/:address', async (req, res) => {
       reportCount: reports.length,
       reports,
       externalFlags,
+      depinHealth,
+      aiDecision,
       mode,
       timestamp: new Date().toISOString()
     };

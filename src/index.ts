@@ -2,8 +2,11 @@ import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import NodeCache from 'node-cache';
 import { env, isChainModeEnabled } from './config/env';
+import aiRoutes from './routes/ai';
+import anchorRoutes from './routes/anchors';
 import checkRoutes from './routes/check';
 import configRoutes from './routes/config';
+import depinRoutes from './routes/depin';
 import reportRoutes from './routes/reports';
 
 const app = express();
@@ -34,6 +37,9 @@ app.get('/', (_req, res) => {
       config: '/api/config',
       check: '/api/check/:address',
       reports: '/api/reports',
+      ai: '/api/ai',
+      anchors: '/api/anchors',
+      depin: '/api/depin',
       health: '/health'
     }
   });
@@ -42,6 +48,9 @@ app.get('/', (_req, res) => {
 app.use('/api/config', configRoutes);
 app.use('/api/check', checkRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/anchors', anchorRoutes);
+app.use('/api/depin', depinRoutes);
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
